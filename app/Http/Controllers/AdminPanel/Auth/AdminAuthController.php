@@ -19,7 +19,7 @@ class AdminAuthController extends Controller
     /**
      * Login an admin user by creating an access token.
      *
-     * @param  \App\Http\Requests\WebApp\Auth\AdminAuthRequest  $request
+     * @param  \App\Http\Requests\AdminPanel\Auth\AdminLoginRequest  $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function login(AdminLoginRequest $request)

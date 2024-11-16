@@ -1,7 +1,8 @@
 <?php
 
+use App\Http\Controllers\Mobile\Auth\UserAuthController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/test', function () {
-    return "Hello World";
+Route::prefix('auth')->group(function () {
+    Route::post('/login', [UserAuthController::class, 'login']);
 });
