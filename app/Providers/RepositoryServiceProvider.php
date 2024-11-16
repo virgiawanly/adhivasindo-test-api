@@ -3,11 +3,14 @@
 namespace App\Providers;
 
 use App\Repositories\AdminRepository;
+use App\Repositories\CourseRepository;
 use App\Repositories\Interfaces\AdminRepositoryInterface;
+use App\Repositories\Interfaces\CourseRepositoryInterface;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use App\Repositories\UserRepository;
 use App\Services\Auth\AdminAuthService;
 use App\Services\Auth\UserAuthService;
+use App\Services\CourseService;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -25,6 +28,11 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
         $this->app->bind(UserAuthService::class, function () {
             return new UserAuthService($this->app->make(UserRepositoryInterface::class));
+        });
+
+        $this->app->bind(CourseRepositoryInterface::class, CourseRepository::class);
+        $this->app->bind(CourseService::class, function () {
+            return new CourseService($this->app->make(CourseRepositoryInterface::class));
         });
     }
 
