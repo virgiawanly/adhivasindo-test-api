@@ -1,7 +1,12 @@
 <?php
 
+use App\Http\Controllers\AdminPanel\Auth\AdminAuthController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/test', function () {
-    return "Hello World";
+Route::prefix('auth')->group(function () {
+    Route::post('/login', [AdminAuthController::class, 'login']);
+});
+
+Route::middleware(['auth:admin'])->group(function () {
+    //
 });
