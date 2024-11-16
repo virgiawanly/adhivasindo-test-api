@@ -107,7 +107,7 @@ class CourseService extends BaseResourceService
             $slug = $this->generateSlug($payload['name']);
 
             // Make sure the slug is unique
-            while (!empty($this->repository()->findBySlug($slug))) {
+            while (!empty($this->repository()->findBySlug($slug, $course->id))) {
                 $slug = $this->generateSlug($payload['name']);
             }
 
@@ -132,10 +132,14 @@ class CourseService extends BaseResourceService
         $competencyIds = [];
         if (!empty($payload['competencies']) && is_array($payload['competencies'])) {
             foreach ($payload['competencies'] as $competency) {
-                if ($competency['id']) {
-                    $course->competencies()->updateExistingPivot($competency['id'], [
-                        'name' => $competency['name'],
-                    ]);
+                if (!empty($competency['id'])) {
+                    $findCompetency = $course->competencies()->find($competency['id']);
+
+                    if (!empty($findCompetency)) {
+                        $findCompetency->update([
+                            'name' => $competency['name'],
+                        ]);
+                    }
 
                     $competencyIds[] = $competency['id'];
                 } else {
