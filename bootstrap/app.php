@@ -36,7 +36,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 } else if ($e instanceof ModelNotFoundException) {
                     return ResponseHelper::notFound($e->getMessage());
                 } else {
-                    return ResponseHelper::internalServerError($e->getMessage());
+                    return ResponseHelper::internalServerError($e->getMessage(), $e);
                 }
             }
         });
