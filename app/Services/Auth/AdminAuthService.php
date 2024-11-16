@@ -19,8 +19,8 @@ class AdminAuthService
     /**
      * Login user by creating an access token.
      *
-     * @param array $data
-     * @return \App\Models\User
+     * @param  array $data
+     * @return array
      */
     public function login(array $data)
     {

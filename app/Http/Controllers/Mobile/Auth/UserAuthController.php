@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Mobile\Auth;
 use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Mobile\Auth\UserLoginRequest;
+use App\Http\Requests\Mobile\Auth\UserRegistrationRequest;
 use App\Services\Auth\UserAuthService;
 
 class UserAuthController extends Controller
@@ -27,5 +28,18 @@ class UserAuthController extends Controller
         $results = $this->userAuthService->login($request->validated());
 
         return ResponseHelper::success(trans('messages.successfully_logged_in'), $results, 200);
+    }
+
+    /**
+     * Register a new user and create an access token.
+     *
+     * @param  \App\Http\Requests\Mobile\Auth\UserRegistrationRequest  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function register(UserRegistrationRequest $request)
+    {
+        $results = $this->userAuthService->register($request->validated());
+
+        return ResponseHelper::success(trans('messages.successfully_registered'), $results, 201);
     }
 }

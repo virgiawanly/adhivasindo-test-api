@@ -5,6 +5,7 @@ return [
     'successfully_updated' => 'Successfully updated',
     'successfully_retrieved' => 'Successfully retrieved',
     'successfully_deleted' => 'Successfully deleted',
+    'successfully_registered' => 'Successfully registered',
     'successfully_logged_in' => 'Successfully logged in',
     'successfully_logged_out' => 'Successfully logged out',
     'resource_not_found' => 'Resource not found',

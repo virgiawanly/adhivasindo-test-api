@@ -19,20 +19,36 @@ class UserAuthService
     /**
      * Login user by creating an access token.
      *
-     * @param array $data
-     * @return \App\Models\User
+     * @param  array $data
+     * @return array
      */
     public function login(array $data)
     {
-        $admin = $this->userRepository->findByEmail($data['email']);
+        $user = $this->userRepository->findByEmail($data['email']);
 
-        if (empty($admin) || !Hash::check($data['password'], $admin->password)) {
+        if (empty($user) || !Hash::check($data['password'], $user->password)) {
             throw new AuthenticationException('Invalid email or password.');
         }
 
         return [
-            'user' => $admin,
-            'token' => $admin->createToken('mobileAppToken')->plainTextToken
+            'user' => $user,
+            'token' => $user->createToken('mobileAppToken')->plainTextToken
+        ];
+    }
+
+    /**
+     * Register a new user and create an access token.
+     *
+     * @param  array $data
+     * @return array
+     */
+    public function register(array $data)
+    {
+        $user = $this->userRepository->save($data);
+
+        return [
+            'user' => $user,
+            'token' => $user->createToken('mobileAppToken')->plainTextToken
         ];
     }
 }
