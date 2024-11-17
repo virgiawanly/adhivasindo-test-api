@@ -115,4 +115,17 @@ class LessonService extends BaseResourceService
 
         return $lesson;
     }
+
+    /**
+     * Mark lesson as completed or incomplete.
+     *
+     * @param  int $userId
+     * @param  int $lessonId
+     * @param  bool $isCompleted
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function updateUserLessonProgress(int $userId, int $lessonId, bool $isCompleted): Model
+    {
+        return $this->repository()->updateUserLessonProgress($userId, $lessonId, $isCompleted);
+    }
 }

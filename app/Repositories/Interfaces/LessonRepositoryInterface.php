@@ -2,6 +2,8 @@
 
 namespace App\Repositories\Interfaces;
 
+use Illuminate\Database\Eloquent\Model;
+
 interface LessonRepositoryInterface extends BaseResourceRepositoryInterface
 {
     /**
@@ -41,4 +43,14 @@ interface LessonRepositoryInterface extends BaseResourceRepositoryInterface
      * @return int
      */
     public function getLessonsCountByChapter(int $chapterId): int;
+
+    /**
+     * Mark lesson as completed or incomplete.
+     *
+     * @param  int $userId
+     * @param  int $lessonId
+     * @param  bool $isCompleted
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function updateUserLessonProgress(int $userId, int $lessonId, bool $isCompleted): Model;
 }

@@ -25,6 +25,7 @@ class Course extends BaseModel
     protected $fillable = [
         'name',
         'slug',
+        'status',
         'description',
         'image',
     ];
@@ -36,6 +37,16 @@ class Course extends BaseModel
      */
     protected $searchables = [
         'name',
+    ];
+
+    /**
+     * The columns that are searchable in the query.
+     *
+     * @var array<string, string>
+     */
+    protected $searchableColumns = [
+        'name' => 'like',
+        'status' => '=',
     ];
 
     /**
@@ -88,5 +99,17 @@ class Course extends BaseModel
     public function scopePublished(Builder $query): Builder
     {
         return $query->where('status', CourseStatus::Published->value);
+    }
+
+    /**
+     * Get the users that enrolled the course.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'user_courses', 'course_id', 'user_id')
+            ->withTimestamps()
+            ->withPivot('deleted_at');
     }
 }

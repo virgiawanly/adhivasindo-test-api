@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Interfaces;
 
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 
 interface CourseRepositoryInterface extends BaseResourceRepositoryInterface
@@ -14,4 +15,42 @@ interface CourseRepositoryInterface extends BaseResourceRepositoryInterface
      * @return \Illuminate\Database\Eloquent\Model|null
      */
     public function findBySlug(string $slug, int|null $excludeId = null): ?Model;
+
+    /**
+     * Find published course.
+     *
+     * @param  int $id
+     * @param  array $relations
+     * @return \Illuminate\Database\Eloquent\Model|null
+     */
+    public function findPublished(int $id, array $relations = []): ?Model;
+
+    /**
+     * Get all user's courses with pagination.
+     *
+     * @param int $userId
+     * @param int $perPage
+     * @param array $queryParams
+     * @param array $relations
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function userCoursePaginatedList(int $userId, int $perPage, array $queryParams = [], array $relations = []): LengthAwarePaginator;
+
+    /**
+     * Find user course with its chapters, lessons, and user's progress.
+     *
+     * @param  int $userId
+     * @param  int $id
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function viewUserCourse(int $userId, int $id): Model;
+
+    /**
+     * Enroll a course.
+     *
+     * @param  int $userId
+     * @param  int $id
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function enrollCourse(int $userId, int $id): Model;
 }
