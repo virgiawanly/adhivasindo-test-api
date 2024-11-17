@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Enums\CourseStatus;
 use App\Repositories\Interfaces\CourseRepositoryInterface;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
@@ -178,5 +179,56 @@ class CourseService extends BaseResourceService
         $course->chapters()->delete();
 
         return $course->delete();
+    }
+
+    /**
+     * Get paginated resources.
+     *
+     * @param  int $userId
+     * @param  array $queryParams
+     * @param  array $relations
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function useCoursePaginatedList(int $userId, array $queryParams, array $relations = []): LengthAwarePaginator
+    {
+        $size = $queryParams['size'] ?? $this->defaultPageSize;
+
+        return $this->repository()->userCoursePaginatedList($userId, $size, $queryParams, $relations);
+    }
+
+    /**
+     * Get a resource by id.
+     *
+     * @param  int $id
+     * @param  array $relations
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function findPublished(int $id, array $relations = []): Model
+    {
+        return $this->repository()->findPublished($id, $relations);
+    }
+
+    /**
+     * Find user course with its chapters, lessons, and user's progress.
+     *
+     * @param  int $userId
+     * @param  int $courseId
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function viewUserCourse(int $userId, int $courseId): Model
+    {
+        return $this->repository()->viewUserCourse($userId, $courseId);
+    }
+
+    /**
+     * Enroll a course.
+     *
+     * @param  int $userId
+     * @param  int $courseId
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function enrollCourse(int $userId, int $courseId): Model
+    {
+        return $this->repository()->enrollCourse($userId, $courseId);
     }
 }
