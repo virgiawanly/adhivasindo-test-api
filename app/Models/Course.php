@@ -49,9 +49,19 @@ class Course extends BaseModel
     }
 
     /**
-     * Get the tools of the course.
+     * Get the chapters of the course.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function chapters()
+    {
+        return $this->hasMany(Chapter::class);
+    }
+
+    /**
+     * Get the tools of the course.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function tools()
     {

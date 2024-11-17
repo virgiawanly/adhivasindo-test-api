@@ -164,4 +164,19 @@ class CourseService extends BaseResourceService
 
         return $course;
     }
+
+    /**
+     * Delete a course and its chapters.
+     *
+     * @param int $id
+     * @return bool
+     */
+    public function deleteCourse(int $id): bool
+    {
+        $course = $this->repository->find($id);
+
+        $course->chapters()->delete();
+
+        return $course->delete();
+    }
 }
