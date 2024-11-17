@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Mobile\Auth\UserLoginRequest;
 use App\Http\Requests\Mobile\Auth\UserRegistrationRequest;
 use App\Services\Auth\UserAuthService;
+use Illuminate\Http\Request;
 
 class UserAuthController extends Controller
 {
@@ -25,7 +26,20 @@ class UserAuthController extends Controller
      */
     public function login(UserLoginRequest $request)
     {
-        $results = $this->userAuthService->login($request->validated());
+        $results = $this->userAuthService->loginJWT($request->only('email', 'password'));
+
+        return ResponseHelper::success(trans('messages.successfully_logged_in'), $results, 200);
+    }
+
+    /**
+     * Login an user user by creating an access token.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function refreshToken(Request $request)
+    {
+        $results = $this->userAuthService->refreshJWT($request->only('refresh_token'));
 
         return ResponseHelper::success(trans('messages.successfully_logged_in'), $results, 200);
     }

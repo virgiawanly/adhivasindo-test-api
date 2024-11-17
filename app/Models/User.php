@@ -7,8 +7,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends BaseAuthenticatableModel
+class User extends BaseAuthenticatableModel implements JWTSubject
 {
     use HasFactory, Notifiable, SoftDeletes, HasApiTokens;
 
@@ -86,5 +87,25 @@ class User extends BaseAuthenticatableModel
         return $this->belongsToMany(Course::class, 'user_courses', 'user_id', 'course_id')
             ->withTimestamps()
             ->withPivot('deleted_at');
+    }
+
+    /**
+     * Get the identifier that will be stored in the subject claim of the JWT.
+     *
+     * @return mixed
+     */
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    /**
+     * Return a key value array, containing any custom claims to be added to the JWT.
+     *
+     * @return array
+     */
+    public function getJWTCustomClaims()
+    {
+        return [];
     }
 }
