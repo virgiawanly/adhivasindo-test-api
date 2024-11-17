@@ -28,7 +28,7 @@ class CreateLessonRequest extends FormRequest
             'chapter_id' => ['required', 'exists:chapters,id,deleted_at,NULL'],
             'title' => ['required', 'max:255'],
             'type' => ['required', Rule::in(array_column(LessonType::cases(), 'value'))],
-            'video_url' => ['required_if:type,' . LessonType::Video->value, 'url'],
+            'video_url' => ['required_if:type,' . LessonType::Video->value, 'nullable', 'url'],
             'video_duration' => ['nullable'],
             'text_content' => ['required_if:type,' . LessonType::Text->value],
         ];
