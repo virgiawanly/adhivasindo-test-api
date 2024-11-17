@@ -47,6 +47,36 @@ class User extends BaseAuthenticatableModel
     }
 
     /**
+     * The attributes that are searchable in the query.
+     *
+     * @var array<int, string>
+     */
+    protected $searchables = [
+        'name',
+        'email',
+    ];
+
+    /**
+     * The columns that are searchable in the query.
+     *
+     * @var array<string, string>
+     */
+    protected $searchableColumns = [
+        'name' => 'like',
+        'email' => 'like',
+    ];
+
+    /**
+     * The columns that are sortable in the query.
+     *
+     * @var array<int, string>
+     */
+    protected $sortableColumns = [
+        'name',
+        'email'
+    ];
+
+    /**
      * Get the user's courses.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
