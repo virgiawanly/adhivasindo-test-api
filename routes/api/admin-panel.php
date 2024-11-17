@@ -12,6 +12,10 @@ Route::prefix('auth')->group(function () {
 });
 
 Route::middleware(['auth:admin'])->group(function () {
+    Route::prefix('auth')->group(function () {
+        Route::get('/profile', [AdminAuthController::class, 'getAdminProfile']);
+    });
+
     Route::get('courses/{course}/chapters', [CourseController::class, 'chapters']);
     Route::apiResource('courses', CourseController::class);
 
