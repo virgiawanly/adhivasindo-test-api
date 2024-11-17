@@ -6,11 +6,14 @@ use App\Repositories\AdminRepository;
 use App\Repositories\CourseRepository;
 use App\Repositories\Interfaces\AdminRepositoryInterface;
 use App\Repositories\Interfaces\CourseRepositoryInterface;
+use App\Repositories\Interfaces\ToolRepositoryInterface;
 use App\Repositories\Interfaces\UserRepositoryInterface;
+use App\Repositories\ToolRepository;
 use App\Repositories\UserRepository;
 use App\Services\Auth\AdminAuthService;
 use App\Services\Auth\UserAuthService;
 use App\Services\CourseService;
+use App\Services\ToolService;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -33,6 +36,11 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(CourseRepositoryInterface::class, CourseRepository::class);
         $this->app->bind(CourseService::class, function () {
             return new CourseService($this->app->make(CourseRepositoryInterface::class));
+        });
+
+        $this->app->bind(ToolRepositoryInterface::class, ToolRepository::class);
+        $this->app->bind(ToolService::class, function () {
+            return new ToolService($this->app->make(ToolRepositoryInterface::class));
         });
     }
 

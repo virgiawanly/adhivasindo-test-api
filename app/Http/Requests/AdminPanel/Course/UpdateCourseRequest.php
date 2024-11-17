@@ -29,6 +29,7 @@ class UpdateCourseRequest extends FormRequest
             'status' => ['nullable', 'sometimes', Rule::in(array_column(CourseStatus::cases(), 'value'))],
             'image' => ['nullable', 'image', 'max:2048'],
             'competencies' => ['nullable', 'array'],
+            'competencies.*.id' => ['nullable'],
             'competencies.*.name' => ['string', 'max:255'],
             'tool_ids' => ['nullable', 'array'],
             'tool_ids.*' => ['exists:tools,id'],
