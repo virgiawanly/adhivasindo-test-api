@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Repositories\Interfaces\ChapterRepositoryInterface;
+use App\Repositories\Interfaces\CourseRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -40,7 +41,9 @@ class ChapterService extends BaseResourceService
      */
     public function listByCourse(int $courseId, array $queryParams, array $relations = []): Collection
     {
-        $queryParams['course_id'] = $courseId;
+        $course = app()->make(CourseRepositoryInterface::class)->find($courseId);
+
+        $queryParams['course_id'] = $course->id;
 
         return $this->repository->list($queryParams, $relations);
     }
@@ -54,7 +57,10 @@ class ChapterService extends BaseResourceService
      */
     public function paginatedListByCourse(int $courseId, array $queryParams, array $relations = []): LengthAwarePaginator
     {
-        $queryParams['course_id'] = $courseId;
+        $course = app()->make(CourseRepositoryInterface::class)->find($courseId);
+
+        $queryParams['course_id'] = $course->id;
+
         $size = $queryParams['size'] ?? $this->defaultPageSize;
 
         return $this->repository->paginatedList($size, $queryParams, $relations);

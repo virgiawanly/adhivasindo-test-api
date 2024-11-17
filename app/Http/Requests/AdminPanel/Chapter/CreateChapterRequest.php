@@ -22,7 +22,7 @@ class CreateChapterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'course_id' => ['required', 'exists:courses,id'],
+            'course_id' => ['required', 'exists:courses,id,deleted_at,NULL'],
             'title' => ['required', 'string', 'max:255'],
         ];
     }

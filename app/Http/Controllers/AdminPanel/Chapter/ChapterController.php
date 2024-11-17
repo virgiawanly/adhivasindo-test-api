@@ -8,6 +8,8 @@ use App\Http\Controllers\BaseResourceController;
 use App\Http\Requests\AdminPanel\Chapter\CreateChapterRequest;
 use App\Http\Requests\AdminPanel\Chapter\UpdateChapterRequest;
 use App\Http\Requests\AdminPanel\Chapter\ReorderChapterRequest;
+use App\Services\LessonService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class ChapterController extends BaseResourceController
@@ -17,7 +19,7 @@ class ChapterController extends BaseResourceController
      *
      * @return void
      */
-    public function __construct(protected ChapterService $chapterService)
+    public function __construct(protected ChapterService $chapterService, protected LessonService $lessonService)
     {
         parent::__construct($chapterService->repository);
     }
@@ -60,5 +62,21 @@ class ChapterController extends BaseResourceController
         });
 
         return ResponseHelper::success(trans('messages.successfully_updated'), $results ?? [], 200);
+    }
+
+    /**
+     * Get lessons of a chapter.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $chapterId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function lessons(Request $request, int $chapterId)
+    {
+        $result = $request->has('paginate') && ($request->paginate === 'false' || $request->paginate === '0')
+            ? $this->lessonService->listByChapter($chapterId, $request->all())
+            : $this->lessonService->paginatedListByChapter($chapterId, $request->all());
+
+        return ResponseHelper::data($result);
     }
 }
