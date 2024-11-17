@@ -3,8 +3,10 @@
 namespace App\Providers;
 
 use App\Repositories\AdminRepository;
+use App\Repositories\ChapterRepository;
 use App\Repositories\CourseRepository;
 use App\Repositories\Interfaces\AdminRepositoryInterface;
+use App\Repositories\Interfaces\ChapterRepositoryInterface;
 use App\Repositories\Interfaces\CourseRepositoryInterface;
 use App\Repositories\Interfaces\ToolRepositoryInterface;
 use App\Repositories\Interfaces\UserRepositoryInterface;
@@ -12,6 +14,7 @@ use App\Repositories\ToolRepository;
 use App\Repositories\UserRepository;
 use App\Services\Auth\AdminAuthService;
 use App\Services\Auth\UserAuthService;
+use App\Services\ChapterService;
 use App\Services\CourseService;
 use App\Services\ToolService;
 use Illuminate\Support\ServiceProvider;
@@ -36,6 +39,11 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(CourseRepositoryInterface::class, CourseRepository::class);
         $this->app->bind(CourseService::class, function () {
             return new CourseService($this->app->make(CourseRepositoryInterface::class));
+        });
+
+        $this->app->bind(ChapterRepositoryInterface::class, ChapterRepository::class);
+        $this->app->bind(ChapterService::class, function () {
+            return new ChapterService($this->app->make(ChapterRepositoryInterface::class));
         });
 
         $this->app->bind(ToolRepositoryInterface::class, ToolRepository::class);
