@@ -19,10 +19,12 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('courses/{course}/chapters', [CourseController::class, 'chapters']);
     Route::apiResource('courses', CourseController::class);
 
+    Route::put('chapters/reorder', [ChapterController::class, 'reorder']);
     Route::patch('chapters/reorder', [ChapterController::class, 'reorder']);
     Route::get('chapters/{chapter}/lessons', [ChapterController::class, 'lessons']);
     Route::apiResource('chapters', ChapterController::class);
 
+    Route::put('lessons/reorder', [LessonController::class, 'reorder']);
     Route::patch('lessons/reorder', [LessonController::class, 'reorder']);
     Route::apiResource('lessons', LessonController::class);
 

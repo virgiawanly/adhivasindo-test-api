@@ -62,6 +62,8 @@ class ToolService extends BaseResourceService
         // Save image
         if (!empty($payload['image']) && $payload['image'] instanceof UploadedFile) {
             $payload['image'] = $payload['image']->store('tools');
+        } else {
+            $payload['image'] = null;
         }
 
         // Create tool
@@ -96,6 +98,8 @@ class ToolService extends BaseResourceService
         // Update image (if uploaded)
         if (!empty($payload['image']) && $payload['image'] instanceof UploadedFile) {
             $payload['image'] = $payload['image']->store('tools');
+        } else {
+            $payload['image'] = $tool->image;
         }
 
         // Update tool

@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\UnauthorizedException;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
@@ -37,6 +38,8 @@ return Application::configure(basePath: dirname(__DIR__))
                     return ResponseHelper::forbidden($e->getMessage());
                 } else if ($e instanceof ModelNotFoundException || $e instanceof RouteNotFoundException || $e instanceof NotFoundHttpException) {
                     return ResponseHelper::notFound($e->getMessage());
+                } else if ($e instanceof BadRequestException) {
+                    return ResponseHelper::badRequest($e->getMessage());
                 } else {
                     return ResponseHelper::internalServerError($e->getMessage(), $e);
                 }

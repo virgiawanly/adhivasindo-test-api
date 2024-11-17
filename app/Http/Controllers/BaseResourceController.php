@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Helpers\ResponseHelper;
 use App\Repositories\BaseResourceRepository;
 use App\Services\BaseResourceService;
-use Exception;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
 abstract class BaseResourceController extends Controller
@@ -37,9 +35,19 @@ abstract class BaseResourceController extends Controller
      */
     public function index(Request $request)
     {
+        $relations = [];
+
+        if (!empty($request->relations)) {
+            if (is_array($request->relations)) {
+                $relations = $request->relations;
+            } else if (is_string($request->relations)) {
+                $relations = explode(',', $request->relations);
+            }
+        }
+
         $result = $request->has('paginate') && ($request->paginate === 'false' || $request->paginate === '0')
-            ? $this->service->list($request->all())
-            : $this->service->paginatedList($request->all());
+            ? $this->service->list($request->all(), $relations)
+            : $this->service->paginatedList($request->all(), $relations);
 
         return ResponseHelper::data($result);
     }
@@ -60,12 +68,23 @@ abstract class BaseResourceController extends Controller
     /**
      * Display the specified resource.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(int $id)
+    public function show(Request $request, int $id)
     {
-        $result = $this->service->find($id);
+        $relations = [];
+
+        if (!empty($request->relations)) {
+            if (is_array($request->relations)) {
+                $relations = $request->relations;
+            } else if (is_string($request->relations)) {
+                $relations = explode(',', $request->relations);
+            }
+        }
+
+        $result = $this->service->find($id, $relations);
 
         return ResponseHelper::data($result);
     }
