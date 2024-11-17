@@ -33,13 +33,33 @@ class Lesson extends BaseModel
     ];
 
     /**
+     * The attributes that are searchable in the query.
+     *
+     * @var array<int, string>
+     */
+    protected $searchables = [
+        'title',
+    ];
+
+    /**
      * The columns that are searchable in the query.
      *
      * @var array<string, string>
      */
     protected $searchableColumns = [
         'course_id' => '=',
+        'chapter_id' => '=',
         'title' => 'like',
+    ];
+
+    /**
+     * The columns that are sortable in the query.
+     *
+     * @var array<int, string>
+     */
+    protected $sortableColumns = [
+        'title',
+        'order',
     ];
 
     /**

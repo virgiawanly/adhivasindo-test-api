@@ -119,6 +119,8 @@ class CourseService extends BaseResourceService
         // Update image (if uploaded)
         if (!empty($payload['image']) && $payload['image'] instanceof UploadedFile) {
             $payload['image'] = $payload['image']->store('courses');
+        } else {
+            $payload['image'] = $course->image;
         }
 
         // Update course
@@ -158,9 +160,7 @@ class CourseService extends BaseResourceService
 
         // Sync tools relationship
         if (!empty($payload['tool_ids']) && is_array($payload['tool_ids'])) {
-            foreach ($payload['tool_ids'] as $tool) {
-                $course->tools()->sync($tool);
-            }
+            $course->tools()->sync($payload['tool_ids']);
         }
 
         return $course;

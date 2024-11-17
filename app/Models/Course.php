@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\CourseStatus;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
 
 class Course extends BaseModel
 {
@@ -31,6 +32,15 @@ class Course extends BaseModel
     ];
 
     /**
+     * The attributes that should be appended to the model.
+     *
+     * @var array<int, string>
+     */
+    protected $appends = [
+        'image_url',
+    ];
+
+    /**
      * The attributes that are searchable in the query.
      *
      * @var array<int, string>
@@ -48,6 +58,33 @@ class Course extends BaseModel
         'name' => 'like',
         'status' => '=',
     ];
+
+    /**
+     * The columns that are sortable in the query.
+     *
+     * @var array<int, string>
+     */
+    protected $sortableColumns = [
+        'name',
+        'slug',
+        'status',
+    ];
+
+    /**
+     * The custom searchables query.
+     *
+     * @return array
+     */
+    public function getCustomSearchables(): array
+    {
+        return [
+            'tools' => function ($query, $value) {
+                $query->whereHas('tools', function ($query) use ($value) {
+                    $query->where('tools.name', 'like', '%' . $value . '%');
+                });
+            }
+        ];
+    }
 
     /**
      * Get the competencies of the course.
@@ -111,5 +148,15 @@ class Course extends BaseModel
         return $this->belongsToMany(User::class, 'user_courses', 'course_id', 'user_id')
             ->withTimestamps()
             ->withPivot('deleted_at');
+    }
+
+    /**
+     * Get the image URL attribute.
+     *
+     * @return string|null
+     */
+    public function getImageUrlAttribute(): ?string
+    {
+        return $this->image ? Storage::url($this->image) : null;
     }
 }
