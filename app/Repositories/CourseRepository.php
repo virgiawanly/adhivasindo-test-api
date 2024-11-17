@@ -193,7 +193,7 @@ class CourseRepository extends BaseResourceRepository implements CourseRepositor
             ])
             ->whereHas('users', function ($query) use ($userId) {
                 $query->where('user_id', $userId);
-            })->find($id);
+            })->findOrFail($id);
 
         return $course;
     }
