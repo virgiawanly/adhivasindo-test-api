@@ -5,6 +5,7 @@ use App\Http\Controllers\AdminPanel\Chapter\ChapterController;
 use App\Http\Controllers\AdminPanel\Course\CourseController;
 use App\Http\Controllers\AdminPanel\Lesson\LessonController;
 use App\Http\Controllers\AdminPanel\Tool\ToolController;
+use App\Http\Controllers\AdminPanel\User\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('auth')->group(function () {
@@ -29,4 +30,5 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::apiResource('lessons', LessonController::class);
 
     Route::apiResource('tools', ToolController::class);
+    Route::apiResource('users', UserController::class)->only(['index', 'show']);
 });
