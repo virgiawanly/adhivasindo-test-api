@@ -4,6 +4,7 @@ namespace App\Services\Auth;
 
 use App\Repositories\Interfaces\AdminRepositoryInterface;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AdminAuthService
@@ -33,6 +34,18 @@ class AdminAuthService
         return [
             'user' => $admin,
             'token' => $admin->createToken('adminPanelToken')->plainTextToken
+        ];
+    }
+
+    /**
+     * Get the authenticated admin profile.
+     *
+     * @return \Illuminate\Contracts\Auth\Authenticatable
+     */
+    public function getProfile()
+    {
+        return [
+            'user' => Auth::user(),
         ];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Lesson extends BaseModel
@@ -40,4 +41,14 @@ class Lesson extends BaseModel
         'course_id' => '=',
         'title' => 'like',
     ];
+
+    /**
+     * Get the lesson user progresses.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function userProgresses(): HasMany
+    {
+        return $this->hasMany(UserCourseProgress::class);
+    }
 }

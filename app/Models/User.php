@@ -45,4 +45,16 @@ class User extends BaseAuthenticatableModel
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Get the user's courses.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function courses()
+    {
+        return $this->belongsToMany(Course::class, 'user_courses', 'user_id', 'course_id')
+            ->withTimestamps()
+            ->withPivot('deleted_at');
+    }
 }

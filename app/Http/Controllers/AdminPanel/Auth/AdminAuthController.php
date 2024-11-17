@@ -28,4 +28,16 @@ class AdminAuthController extends Controller
 
         return ResponseHelper::success(trans('messages.successfully_logged_in'), $results, 200);
     }
+
+    /**
+     * Get the authenticated admin profile.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getAdminProfile()
+    {
+        $results = $this->adminAuthService->getProfile();
+
+        return ResponseHelper::success(trans('messages.successfully_logged_in'), $results, 200);
+    }
 }
