@@ -56,4 +56,16 @@ class UserAuthController extends Controller
 
         return ResponseHelper::success(trans('messages.successfully_registered'), $results, 201);
     }
+
+    /**
+     * Get the authenticated admin profile.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getUserProfile()
+    {
+        $results = $this->userAuthService->getProfile();
+
+        return ResponseHelper::data($results, 200);
+    }
 }

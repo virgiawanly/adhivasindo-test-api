@@ -84,4 +84,16 @@ class UserAuthService
             'refresh_token' => $refreshToken
         ];
     }
+
+    /**
+     * Get the authenticated user profile.
+     *
+     * @return \Illuminate\Contracts\Auth\Authenticatable
+     */
+    public function getProfile()
+    {
+        return [
+            'user' => Auth::user(),
+        ];
+    }
 }
