@@ -53,4 +53,32 @@ interface CourseRepositoryInterface extends BaseResourceRepositoryInterface
      * @return \Illuminate\Database\Eloquent\Model
      */
     public function enrollCourse(int $userId, int $id): Model;
+
+    /**
+     * Get popular courses.
+     *
+     * @param  int $perPage
+     * @param  array $relations
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function getPopularCourses(int $perPage, array $relations = []): LengthAwarePaginator;
+
+    /**
+     * Get recently added courses.
+     *
+     * @param  int $perPage
+     * @param  array $relations
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function getRecentlyAddedCourses(int $perPage, array $relations = []): LengthAwarePaginator;
+
+    /**
+     * Get user's recently accessed courses.
+     *
+     * @param  int $userId
+     * @param  int $perPage
+     * @param  array $relations
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function getUserRecentlyAccessedCourses(int $userId, int $perPage, array $relations = []): LengthAwarePaginator;
 }
