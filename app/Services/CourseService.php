@@ -231,4 +231,41 @@ class CourseService extends BaseResourceService
     {
         return $this->repository()->enrollCourse($userId, $courseId);
     }
+
+    /**
+     * Get popular courses.
+     *
+     * @param  int $perPage
+     * @param  array $relations
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function getPopularCourses(int $perPage, array $relations = []): LengthAwarePaginator
+    {
+        return $this->repository()->getPopularCourses($perPage, $relations);
+    }
+
+    /**
+     * Get recently added courses.
+     *
+     * @param  int $perPage
+     * @param  array $relations
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function getRecentlyAddedCourses(int $perPage, array $relations = []): LengthAwarePaginator
+    {
+        return $this->repository()->getRecentlyAddedCourses($perPage, $relations);
+    }
+
+    /**
+     * Get user's recently accessed courses.
+     *
+     * @param  int $userId
+     * @param  int $perPage
+     * @param  array $relations
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function getUserRecentlyAccessedCourses(int $userId, int $perPage, array $relations = []): LengthAwarePaginator
+    {
+        return $this->repository()->getUserRecentlyAccessedCourses($userId, $perPage, $relations);
+    }
 }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\CourseStatus;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Storage;
 
@@ -158,5 +159,25 @@ class Course extends BaseModel
     public function getImageUrlAttribute(): ?string
     {
         return $this->image ? Storage::url($this->image) : null;
+    }
+
+    /**
+     * Get the lessons of the course.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function lessons(): HasMany
+    {
+        return $this->hasMany(Lesson::class);
+    }
+
+    /**
+     * Get the user progresses of the course.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function userProgresses(): HasMany
+    {
+        return $this->hasMany(UserCourseProgress::class);
     }
 }
