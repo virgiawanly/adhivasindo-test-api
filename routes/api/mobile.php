@@ -15,6 +15,10 @@ Route::prefix('auth')->group(function () {
 Route::apiResource('courses', AllCourseController::class)->only(['index', 'show']);
 
 Route::middleware([JWTMiddleware::class])->group(function () {
+    Route::prefix('auth')->group(function () {
+        Route::get('/profile', [UserAuthController::class, 'getUserProfile']);
+    });
+
     Route::post('courses/{course}/enroll', [AllCourseController::class, 'enrollCourse']);
 
     Route::prefix('user-courses')->group(function () {

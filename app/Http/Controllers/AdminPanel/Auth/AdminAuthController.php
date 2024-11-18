@@ -38,6 +38,6 @@ class AdminAuthController extends Controller
     {
         $results = $this->adminAuthService->getProfile();
 
-        return ResponseHelper::success(trans('messages.successfully_logged_in'), $results, 200);
+        return ResponseHelper::data($results, 200);
     }
 }
