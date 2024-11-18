@@ -2,7 +2,9 @@
 
 namespace App\Repositories;
 
+use App\Enums\LessonType;
 use App\Models\Course;
+use App\Models\UserCourseProgress;
 use App\Repositories\Interfaces\CourseRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
@@ -39,6 +41,16 @@ class CourseRepository extends BaseResourceRepository implements CourseRepositor
             ->when(count($relations), function ($query) use ($relations) {
                 $query->with($relations);
             })
+            ->withCount([
+                'chapters AS total_chapters',
+                'lessons AS total_lessons',
+                'lessons AS total_video_lessons' => function ($query) {
+                    $query->where('lessons.type', LessonType::Video->value);
+                },
+                'lessons AS total_text_lessons' => function ($query) {
+                    $query->where('lessons.type', LessonType::Text->value);
+                },
+            ])
             ->when(!empty($queryParams['tool_id']), function ($query) use ($queryParams) {
                 $query->whereHas('tools', function ($query) use ($queryParams) {
                     $query->where('tool_id', $queryParams['tool_id']);
@@ -70,6 +82,16 @@ class CourseRepository extends BaseResourceRepository implements CourseRepositor
             ->when(count($relations), function ($query) use ($relations) {
                 $query->with($relations);
             })
+            ->withCount([
+                'chapters AS total_chapters',
+                'lessons AS total_lessons',
+                'lessons AS total_video_lessons' => function ($query) {
+                    $query->where('lessons.type', LessonType::Video->value);
+                },
+                'lessons AS total_text_lessons' => function ($query) {
+                    $query->where('lessons.type', LessonType::Text->value);
+                },
+            ])
             ->when(!empty($queryParams['tool_id']), function ($query) use ($queryParams) {
                 $query->whereHas('tools', function ($query) use ($queryParams) {
                     $query->where('tool_id', $queryParams['tool_id']);
@@ -92,6 +114,16 @@ class CourseRepository extends BaseResourceRepository implements CourseRepositor
     {
         return $this->model
             ->published()
+            ->withCount([
+                'chapters AS total_chapters',
+                'lessons AS total_lessons',
+                'lessons AS total_video_lessons' => function ($query) {
+                    $query->where('lessons.type', LessonType::Video->value);
+                },
+                'lessons AS total_text_lessons' => function ($query) {
+                    $query->where('lessons.type', LessonType::Text->value);
+                },
+            ])
             ->when(count($relations), function ($query) use ($relations) {
                 $query->with($relations);
             })->findOrFail($id);
@@ -132,6 +164,20 @@ class CourseRepository extends BaseResourceRepository implements CourseRepositor
 
         return $this->model
             ->published()
+            ->withCount([
+                'chapters AS total_chapters',
+                'lessons AS total_lessons',
+                'lessons AS total_video_lessons' => function ($query) {
+                    $query->where('lessons.type', LessonType::Video->value);
+                },
+                'lessons AS total_text_lessons' => function ($query) {
+                    $query->where('lessons.type', LessonType::Text->value);
+                },
+                'userProgresses AS user_total_completed_lessons' => function ($query) use ($userId) {
+                    $query->where('user_course_progresses.user_id', $userId)
+                        ->whereNotNull('user_course_progresses.completed_at');
+                }
+            ])
             ->whereHas('users', function ($query) use ($userId) {
                 $query->where('user_id', $userId);
             })
@@ -196,5 +242,102 @@ class CourseRepository extends BaseResourceRepository implements CourseRepositor
             })->findOrFail($id);
 
         return $course;
+    }
+
+    /**
+     * Get popular courses.
+     *
+     * @param  int $perPage
+     * @param  array $relations
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function getPopularCourses(int $perPage, array $relations = []): LengthAwarePaginator
+    {
+        return $this->model
+            ->published()
+            ->withCount([
+                'users AS total_users',
+                'chapters AS total_chapters',
+                'lessons AS total_lessons',
+                'lessons AS total_video_lessons' => function ($query) {
+                    $query->where('lessons.type', LessonType::Video->value);
+                },
+                'lessons AS total_text_lessons' => function ($query) {
+                    $query->where('lessons.type', LessonType::Text->value);
+                },
+            ])
+            ->orderBy('total_users', 'desc')
+            ->when(count($relations), function ($query) use ($relations) {
+                $query->with($relations);
+            })->paginate($perPage);
+    }
+
+    /**
+     * Get recently added courses.
+     *
+     * @param  int $perPage
+     * @param  array $relations
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function getRecentlyAddedCourses(int $perPage, array $relations = []): LengthAwarePaginator
+    {
+        return $this->model
+            ->published()
+            ->withCount([
+                'users AS total_users',
+                'chapters AS total_chapters',
+                'lessons AS total_lessons',
+                'lessons AS total_video_lessons' => function ($query) {
+                    $query->where('lessons.type', LessonType::Video->value);
+                },
+                'lessons AS total_text_lessons' => function ($query) {
+                    $query->where('lessons.type', LessonType::Text->value);
+                },
+            ])
+            ->orderBy('created_at', 'desc')
+            ->when(count($relations), function ($query) use ($relations) {
+                $query->with($relations);
+            })->paginate($perPage);
+    }
+
+    /**
+     * Get user's recently accessed courses.
+     *
+     * @param  int $userId
+     * @param  int $perPage
+     * @param  array $relations
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function getUserRecentlyAccessedCourses(int $userId, int $perPage, array $relations = []): LengthAwarePaginator
+    {
+        // Order by last completed lesson
+        $lastLessonProgresses = UserCourseProgress::query()
+            ->whereNotNull('completed_at')
+            ->orderBy('completed_at', 'desc')
+            ->groupBy('completed_at')
+            ->groupBy('course_id')
+            ->limit($perPage);
+
+        return $this->model
+            ->published()
+            ->withCount([
+                'users AS total_users',
+                'chapters AS total_chapters',
+                'lessons AS total_lessons',
+                'lessons AS total_video_lessons' => function ($query) {
+                    $query->where('lessons.type', LessonType::Video->value);
+                },
+                'lessons AS total_text_lessons' => function ($query) {
+                    $query->where('lessons.type', LessonType::Text->value);
+                },
+                'userProgresses AS user_total_completed_lessons' => function ($query) use ($userId) {
+                    $query->where('user_course_progresses.user_id', $userId)
+                        ->whereNotNull('user_course_progresses.completed_at');
+                }
+            ])
+            ->whereIn('id', $lastLessonProgresses->pluck('course_id'))
+            ->when(count($relations), function ($query) use ($relations) {
+                $query->with($relations);
+            })->paginate($perPage);
     }
 }

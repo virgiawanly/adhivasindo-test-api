@@ -39,12 +39,23 @@ class AllCourseController extends Controller
     /**
      * Display the specified resource.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(int $id)
+    public function show(Request $request, int $id)
     {
-        $result = $this->courseService->findPublished($id);
+        $relations = [];
+
+        if (!empty($request->relations)) {
+            if (is_array($request->relations)) {
+                $relations = $request->relations;
+            } else if (is_string($request->relations)) {
+                $relations = explode(',', $request->relations);
+            }
+        }
+
+        $result = $this->courseService->findPublished($id, $relations);
 
         return ResponseHelper::data($result);
     }
